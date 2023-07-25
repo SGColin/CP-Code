@@ -1,23 +1,17 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-map<string, bool> vis;
+set<string> s;
 
 int main() {
-	int n; cin >> n;
-	int ans = 0;
-	string s;
-	for (int i = 1; i <= n; ++i) {
-		cin >> s;
-		bool fl = true;
-		if (vis[s]) fl = false;
-		reverse(s.begin(), s.end());
-		if (vis[s]) fl = false;
-		vis[s] = true;
-		reverse(s.begin(), s.end());
-		vis[s] = true;
-		ans += fl;
-	}
-	printf("%d\n", ans);
-	return 0;
+    int n, ans = 0; cin >> n;
+    for (int i = 1; i <= n; ++i) {
+        string t; cin >> t;
+        if (s.find(t) == s.end()) ++ans;
+        s.insert(t);
+        reverse(t.begin(), t.end());
+        s.insert(t);
+    }
+    cout << ans << endl;
+    return 0;
 }
