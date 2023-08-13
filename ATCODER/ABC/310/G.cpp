@@ -1,3 +1,63 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+
+inline ll rd() {
+	ll x = 0;
+	bool f = 0;
+	char c = getchar();
+	for (; !isdigit(c); c = getchar()) f |= (c == '-');
+	for (; isdigit(c); c = getchar()) x = x * 10 + (c ^ 48);
+	return f ? -x : x;
+}
+
+#define N 200007
+#define mod 998244353
+#define rep(i, a, b) for (int i = (a); i <= (b); ++i)
+
+inline int SUM(int a, int b) {return a + b >= mod ? a + b - mod : a + b;}
+inline int PROD(int a, int b) {return 1ll * a * b % mod;}
+
+inline int fpow(int x, int t = mod - 2) {
+	int res = 1;
+	for (; t; t >>= 1, x = 1ll * x * x % mod)
+		if (t & 1) res = 1ll * res * x % mod;
+	return res;
+}
+
+int a[N], b[N], tmp[N], ans[N];
+
+int main() {
+	int n = rd();
+	ll k = rd();
+	int inv = fpow(k % mod);
+	rep(i, 1, n) a[i] = rd();
+	rep(i, 1, n) b[i] = rd();
+	
+	// pass for the first time
+	rep(i, 1, n) tmp[i] = 0;
+	rep(i, 1, n) tmp[a[i]] = SUM(tmp[a[i]], b[i]);
+	rep(i, 1, n) b[i] = tmp[i];
+
+	for (; k; k >>= 1) {
+		if (k & 1) {
+			rep(i, 1, n) ans[i] = SUM(ans[i], b[i]);
+			// pass to gap the first time
+			rep(i, 1, n) tmp[i] = 0;
+			rep(i, 1, n) tmp[a[i]] = SUM(tmp[a[i]], b[i]);
+			rep(i, 1, n) b[i] = tmp[i];
+		}
+		// doubling
+		rep(i, 1, n) tmp[i] = 0;
+		rep(i, 1, n) tmp[a[i]] = SUM(tmp[a[i]], b[i]);
+		rep(i, 1, n) b[i] = SUM(b[i], tmp[i]);
+		
+		rep(i, 1, n) tmp[i] = a[a[i]];
+		rep(i, 1, n) a[i] = tmp[i];
+	}
+	for (int i = 1; i <= n; ++i) printf("%d ", PROD(ans[i], inv));
+	return 0;
+}
 
 // we can also using difference and prefix sum on chains and circles to solve this problem 
 /*
